@@ -1,1 +1,12 @@
 *.sublime-workspace
+
+# Composer
+# 
+# install directory
+vendor/
+# file about the currently installed versions
+composer.lock
+
+# Cache directory
+cache/*
+!cache/.gitkeep
