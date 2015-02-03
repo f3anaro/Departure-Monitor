@@ -45,13 +45,14 @@ $stops = [
 
 
 // Make HTTP request to external website
-// Return an JSON list with the following elements:
+// Return a JSON list with the following elements:
 // 
 //   [
 //      0 => line,
 //      1 => direction,
 //      2 => departure time in minutes
 //   ]
+//   
 $request = $client->createRequest('GET', 'http://widgets.vvo-online.de/abfahrtsmonitor/abfahrten.do', [
     'query' => [
         'ort' => 'Dresden',
@@ -73,6 +74,6 @@ foreach ($stops as $street => $value) {
 
 
 echo $twig->render('index.html', [
-    'stops' => $stops,
+    'stops'   => $stops,
     'marquee' => randomMarquee(),
 ]);

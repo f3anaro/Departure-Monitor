@@ -34,6 +34,9 @@
       {# isn't a marquee really annoying?! :P #}
       <h2><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></h2>
 
+      <div>{{ "now" | date("H:i") }}</div>
+      <div>{{ "now" | date("d.m.Y")  }}</div>
+
     {% endblock %}
   </body>
 </html>
