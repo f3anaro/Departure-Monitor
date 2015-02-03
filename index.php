@@ -72,4 +72,7 @@ foreach ($stops as $street => $value) {
 
 
 
-echo $twig->render('index.html', ['stops' => $stops]);
+echo $twig->render('index.html', [
+    'stops' => $stops,
+    'marquee' => randomMarquee(),
+]);
