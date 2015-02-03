@@ -10,3 +10,6 @@ composer.lock
 # Cache directory
 cache/*
 !cache/.gitkeep
+
+# Bower
+bower_components/

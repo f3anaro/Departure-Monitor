@@ -4,51 +4,73 @@
     <meta charset="utf-8">
     <title>{% block title %}Abfahrtsmonitor{% endblock %}</title>
 
-    <!-- <link rel="stylesheet" type="text/css" href="css/app.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
   </head>
   <body>
     {% block body %}
-
-      {% for street, departures in stops %}
-        <h1>{{ street }}</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Linie</th>
-              <th>Richtung</th>
-              <th>In Minuten</th>
-            </tr>
-          </thead>          
-          <tbody>
-            {% for departure in departures %}
-              <tr>
-                <td>{{ departure[0] }}</td>
-                <td>{{ departure[1] }}</td>
-                <td>{{ departure[2] }}</td>
-              </tr>
+      <div id="wrapper">
+        <div class="row">
+          <!-- left -->
+          <div class="col-md-7">
+            {% for street, departures in stops %}
+              <h1>{{ street }}</h1>
+              <table class="table table-striped table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th>Linie</th>
+                    <th>Richtung</th>
+                    <th>In Minuten</th>
+                  </tr>
+                </thead>          
+                <tbody>
+                  {% for departure in departures %}
+                    <tr>
+                      <td>{{ departure[0] }}</td>
+                      <td>{{ departure[1] }}</td>
+                      <td>{{ departure[2] }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             {% endfor %}
-          </tbody>
-        </table>
-      {% endfor %}
-
-      <!-- Weather -->
-      <div>
-        {% for time, values in weather %}
-          <div class="wetterbox">
-            <span class="schrift">{{ time }}</span>
-            <span class="innenwettertext">{{ values['text'] }}</span>
-            <span class="temp">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</span>
-            <span class="niederschlag">Niederschlagswahrscheinlichkeit: {{ values['rainfall'] }} %</span>
-            <span class="wind">Windgeschwindigkeit: {{ values['wind'] }} km/h</span>
           </div>
-        {% endfor %}
-      </div>
 
-      {# isn't a marquee really annoying?! :P #}
-      <h2><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></h2>
+          <!-- right -->
+          <div class="col-md-5">
+            <!-- Weather -->
+            <h1 class="text-center">Wetter</h1>
+              {% for time, values in weather %}
+                <div class="col-md-6 weather-box">
+                  <h3 class="text-center">{{ time }}</h3>
+                  <p class="text-center">{{ values['text'] }}</p>
+                  <p class="text-center">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</p>
+                  <div class="row">
+                    <p class="col-md-8">Niederschlagswkt:</p>
+                    <p class="col-md-4 text-right">{{ values['rainfall'] }} %</p>
+                  </div>
+                  <div class="row">
+                    <p class="col-md-8">Windgeschwindigkeit:</p>
+                    <p class="col-md-4 text-right">{{ values['wind'] }} km/h</p>
+                  </div>
+                </div>
+              {% endfor %}
+          </div>
+        </div>
 
-      <div>{{ "now" | date("H:i") }}</div>
-      <div>{{ "now" | date("d.m.Y")  }}</div>
+        {# isn't a marquee really annoying?! :P #}
+        <p class="lead"><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></p>
+
+        <footer class="row">
+          <div class="col-md-6"><p class="text-center">{{ "now" | date("H:i") }}</p></div>
+          <div class="col-md-6"><p class="text-center">{{ "now" | date("d.m.Y")  }}</p></div>
+        </div>
+      </footer>
 
     {% endblock %}
   </body>

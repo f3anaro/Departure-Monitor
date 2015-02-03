@@ -4,16 +4,34 @@ A simple webpage written in PHP for displying the departure times
 and wether in the flat share. The PHP script runs on a
 Raspberry Pi
 
-# Installation
+## Development installation
 
-First of all, you need PHP for the command line. On Debian-based
+This section describes how you get a running development platform for this
+project. For the deplyment look the section below. 
+
+
+### Requirements
+
+First of all, you need git and PHP for the command line. On Debian-based
 distribution, just install the follwing package:
 
 ```bash
-$ sudo apt-get install php5-cli
+$ sudo apt-get install git-core php5-cli
 ```
 
-## Getting composer
+We have used [Bower](http://bower.io/) - another package manager - for our web assets like
+Bootstrap and jQuery. Take a look at the [docs](http://bower.io/) how to get Bower running
+on your system (requires [nodes.js](http://nodejs.org/)).
+
+```
+# Add PPA for node.js
+$ curl -sL https://deb.nodesource.com/setup | sudo bash -
+# Install node.js from apt
+$ sudo apt-get install nodejs
+
+# Now you can install bower
+$ sudo npm install -g bower
+```
 
 Each modern web script lanuage uses package managers today - even PHP. The
 defacto standard package manager for PHP is [composer](https://getcomposer.org).
@@ -29,6 +47,20 @@ $ curl -sS https://getcomposer.org/installer | php
 $ mv composer.phar /usr/local/bin/composer
 ```
 
+
+### Get the source code
+
+Now it is time to get the source code!
+
+```bash
+# Get the source code
+$ git clone git@github.com:f3anaro/departure-monitor.git
+
+$ cd departure-monitor/
+```
+
+### Install PHP packages and web assets
+
 Now you can use composer to install additional PHP packages - why do you want
 to program something that was already written? ;)
 
@@ -41,8 +73,14 @@ information.
 $ composer install
 ```
 
+After the PHP packages, we use Bower to install the web assets.
 
-# Development server
+```bash
+$ bower install
+```
+
+
+## Development server
 
 For development, you can use PHP's [builtin webserver](http://php.net/manual/en/features.commandline.webserver.php)
 
@@ -53,4 +91,18 @@ For development, you can use PHP's [builtin webserver](http://php.net/manual/en/
 #     http://localhost:8000/index.php
 # 
 $ php -S localhost:8000
+```
+
+
+## Deployment
+
+The deployment can be done very easily. You just need to get all the required files - like
+the web assets, PHP and CSS files on the Server. You can achive this with `rsync` for example.
+
+That means you can use Bower and Composer locally on your development machine and just copy all
+the required stuff to the server via SSH. Of course you can also install Composer and Bower 
+on your remote server and install the packages this way.
+
+```bash
+$ rsync --delete --recursive . user@server:/var/www/departure-monitor
 ```
