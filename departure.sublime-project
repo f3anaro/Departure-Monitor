@@ -2,6 +2,7 @@
 	"folders":
 	[
 		{
+            "name": "Departure Monitor",
 			"follow_symlinks": true,
 			"path": "."
 		}

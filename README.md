@@ -12,6 +12,13 @@ project. For the deplyment look the section below.
 
 ### Requirements
 
+ * git - amazing version control system
+ * node.js - JavaScript backend
+ * Bower - Web assets package manager
+ * Grunt - JavaScript Task runner
+ * Composer - PHP package manager
+
+
 First of all, you need git and PHP for the command line. On Debian-based
 distribution, just install the follwing package:
 
@@ -19,9 +26,10 @@ distribution, just install the follwing package:
 $ sudo apt-get install git-core php5-cli
 ```
 
-We have used [Bower](http://bower.io/) - another package manager - for our web assets like
-Bootstrap and jQuery. Take a look at the [docs](http://bower.io/) how to get Bower running
-on your system (requires [nodes.js](http://nodejs.org/)).
+We use [Bower](http://bower.io/) - another package manager for our web assets like
+Bootstrap and jQuery - and [Grunt](http://gruntjs.com/) - a JavaScript task runner
+for build processes. Both programs are written in JavaScript and require
+[node.js](http://nodejs.org/).
 
 ```
 # Add PPA for node.js
@@ -29,8 +37,9 @@ $ curl -sL https://deb.nodesource.com/setup | sudo bash -
 # Install node.js from apt
 $ sudo apt-get install nodejs
 
-# Now you can install bower
+# Now you can install Bower and Grunt globally
 $ sudo npm install -g bower
+$ sudo npm install -g grunt-cli
 ```
 
 Each modern web script lanuage uses package managers today - even PHP. The
@@ -73,9 +82,14 @@ information.
 $ composer install
 ```
 
-After the PHP packages, we use Bower to install the web assets.
+After the PHP packages, we use `npm` to install the required JavaScript packages
+and Bower to install the web assets
 
 ```bash
+# JavaScript packages
+$ npm install
+
+# Web assets
 $ bower install
 ```
 
