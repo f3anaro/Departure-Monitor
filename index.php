@@ -70,8 +70,35 @@ function getDepartures(Client $client, $streets = ["Lene-Glatzer-Straße", "Jaco
     return $stops;
 }
 
+
+function getWeather(Client $client) {
+
+    $response = $client->get('http://api.wetter.com/forecast/weather/city/DE0002265010/project/wetteranzeigewg/cs/dbc178aa617f85fd27676d00ae85332e');
+    // parse the XML response
+    $xml = $response->xml();
+  
+
+    // simple lookup table for times
+    $times   = ['Früh', 'Mittag', 'Abend', 'Nacht'];
+    $weather = [];
+
+    for ($i = 0; $i < count($times); $i++) { 
+        $weather[$times[$i]] = [
+            'text'     => $xml->forecast->date[0]->time[$i]->w_txt,
+            'wind'     => $xml->forecast->date[0]->time[$i]->ws,
+            'max_temp' => $xml->forecast->date[0]->time[$i]->tx,
+            'min_temp' => $xml->forecast->date[0]->time[$i]->tn,
+            'rainfall' => $xml->forecast->date[0]->time[$i]->pc,
+        ];
+    }
+
+    return $weather;
+}
+
+
 // render template with the given context of variables
 echo $twig->render('index.html', [
     'stops'   => getDepartures($client),
     'marquee' => randomMarquee(),
+    'weather' => getWeather($client),
 ]);

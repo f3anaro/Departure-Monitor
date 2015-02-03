@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<city>
+  <city_code>DE0002265010</city_code>
+  <name>Dresden</name>
+  <url>deutschland/dresden/blasewitz/DE0002265010.html</url>
+  <post_code>01277</post_code>
+  <credit>
+    <!--In order to use the free weather data from wetter.com you HAVE TO display at least two out of three of the following possibilities: text, link, logo-->
+    <text>Powered by wetter.com</text>
+    <link>http://www.wetter.com</link>
+    <logo>Download at http://www.wetter.com/api/downloads/#logos</logo>
+  </credit>
+  <forecast>
+    <date value="2015-02-03">
+      <w>71</w>
+      <tx>3</tx>
+      <pc>90</pc>
+      <time value="06:00">
+        <w>71</w>
+        <tx>2</tx>
+        <pc>90</pc>
+        <tn>-1</tn>
+        <p>5</p>
+        <ws>15</ws>
+        <d>1422943200</d>
+        <w_txt>leichter Schneefall</w_txt>
+      </time>
+      <time value="11:00">
+        <w>71</w>
+        <tx>2</tx>
+        <pc>90</pc>
+        <tn>2</tn>
+        <p>6</p>
+        <ws>15</ws>
+        <d>1422961200</d>
+        <w_txt>leichter Schneefall</w_txt>
+      </time>
+      <time value="17:00">
+        <w>71</w>
+        <tx>3</tx>
+        <pc>90</pc>
+        <tn>-1</tn>
+        <p>6</p>
+        <ws>10</ws>
+        <d>1422982800</d>
+        <w_txt>leichter Schneefall</w_txt>
+      </time>
+      <time value="23:00">
+        <w>71</w>
+        <tx>-1</tx>
+        <pc>90</pc>
+        <tn>-2</tn>
+        <p>6</p>
+        <ws>7</ws>
+        <d>1423004400</d>
+        <w_txt>leichter Schneefall</w_txt>
+      </time>
+      <d>1422943200</d>
+      <tn>-1</tn>
+      <p>24</p>
+      <ws>12</ws>
+      <w_txt>leichter Schneefall</w_txt>
+    </date>
+  </forecast>
+</city>

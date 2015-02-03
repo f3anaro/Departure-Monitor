@@ -31,6 +31,19 @@
         </table>
       {% endfor %}
 
+      <!-- Weather -->
+      <div>
+        {% for time, values in weather %}
+          <div class="wetterbox">
+            <span class="schrift">{{ time }}</span>
+            <span class="innenwettertext">{{ values['text'] }}</span>
+            <span class="temp">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</span>
+            <span class="niederschlag">Niederschlagswahrscheinlichkeit: {{ values['rainfall'] }} %</span>
+            <span class="wind">Windgeschwindigkeit: {{ values['wind'] }} km/h</span>
+          </div>
+        {% endfor %}
+      </div>
+
       {# isn't a marquee really annoying?! :P #}
       <h2><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></h2>
 
