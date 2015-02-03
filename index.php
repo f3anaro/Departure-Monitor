@@ -38,42 +38,40 @@ function randomMarquee() {
 }
 
 
-$stops = [
-    'Lene-Glatzer-Straße' => null,
-    'Jacobi-Straße' => null,
-];
+/**
+ * Load departure times from an external webpage.
+ * 
+ * @param  Client  $client   GuzzleHttp 
+ * @param  array   $streets list of streets names that should be requests
+ * @param  integer $limit   How many entries per stop
+ * @return array   Map with structure street => [
+ *                     0 => line,
+ *                     1 => direction,
+ *                     2 => departure time in minutes,
+ *                 ]
+ */
+function getDepartures(Client $client, $streets = ["Lene-Glatzer-Straße", "Jacobi-Straße"], $limit = 6) {
+    // Make HTTP request to external website that returns a JSON list
+    $request = $client->createRequest('GET', 'http://widgets.vvo-online.de/abfahrtsmonitor/abfahrten.do', [
+        'query' => [
+            'ort' => 'Dresden',
+            'lim' => $limit,
+        ],
+    ]);
+    $stops = [];
 
+    foreach ($streets as $street) {
+        $request->getQuery()->set('hst', $street);
+        $response = $client->send($request);
+        
+        $stops[$street] = $response->json();
+    }
 
-// Make HTTP request to external website
-// Return a JSON list with the following elements:
-// 
-//   [
-//      0 => line,
-//      1 => direction,
-//      2 => departure time in minutes
-//   ]
-//   
-$request = $client->createRequest('GET', 'http://widgets.vvo-online.de/abfahrtsmonitor/abfahrten.do', [
-    'query' => [
-        'ort' => 'Dresden',
-        'lim' => 6,
-    ],
-]);
-
-foreach ($stops as $street => $value) {
-    $request->getQuery()->set('hst', $street);
-    $response = $client->send($request);
-    
-    $stops[$street] = $response->json();
+    return $stops;
 }
 
-// Zeit und Datum Für den Abfahrtsmonitor
-// $uhrzeit = date('H:i', time());
-// $datum   = date('d.m.Y', time());
-
-
-
+// render template with the given context of variables
 echo $twig->render('index.html', [
-    'stops'   => $stops,
+    'stops'   => getDepartures($client),
     'marquee' => randomMarquee(),
 ]);
