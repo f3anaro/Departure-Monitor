@@ -40,3 +40,17 @@ information.
 # install all required PHP packages
 $ composer install
 ```
+
+
+# Development server
+
+For development, you can use PHP's [builtin webserver](http://php.net/manual/en/features.commandline.webserver.php)
+
+```bash
+# Now you can call all scripts relativly to the working directory of the server,
+# for example:
+# 
+#     http://localhost:8000/index.php
+# 
+$ php -S localhost:8000
+```

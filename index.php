@@ -12,7 +12,8 @@ $client = new Client();
 // initialize the template engine Twig
 $loader = new Twig_Loader_Filesystem(__DIR__ . '/templates');
 $twig   = new Twig_Environment($loader, [
-    'cache' => __DIR__ . '/cache',
+    // use cache directory to speed up the template rendering
+    // 'cache' => __DIR__ . '/cache',
 ]);
 
 
@@ -37,7 +38,10 @@ function randomMarquee() {
 }
 
 
-$stops = ['Lene-Glatzer-Straße', 'Jacobi-Straße'];
+$stops = [
+    'Lene-Glatzer-Straße' => null,
+    'Jacobi-Straße' => null,
+];
 
 
 // Make HTTP request to external website
@@ -55,15 +59,12 @@ $request = $client->createRequest('GET', 'http://widgets.vvo-online.de/abfahrtsm
     ],
 ]);
 
-foreach ($stops as $stop) {
-    $request->getQuery()->set('hst', $stop);
+foreach ($stops as $street => $value) {
+    $request->getQuery()->set('hst', $street);
     $response = $client->send($request);
     
-    $json = $response->json();
-    print_r($json);
+    $stops[$street] = $response->json();
 }
-
-
 
 // Zeit und Datum Für den Abfahrtsmonitor
 // $uhrzeit = date('H:i', time());
@@ -71,4 +72,4 @@ foreach ($stops as $stop) {
 
 
 
-echo $twig->render('index.html', []);
+echo $twig->render('index.html', ['stops' => $stops]);

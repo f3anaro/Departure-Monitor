@@ -4,11 +4,33 @@
     <meta charset="utf-8">
     <title>{% block title %}Abfahrtsmonitor{% endblock %}</title>
 
-    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/app.css"> -->
   </head>
   <body>
     {% block body %}
-      
+
+      {% for street, departures in stops %}
+        <h1>{{ street }}</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Linie</th>
+              <th>Richtung</th>
+              <th>In Minuten</th>
+            </tr>
+          </thead>          
+          <tbody>
+            {% for departure in departures %}
+              <tr>
+                <td>{{ departure[0] }}</td>
+                <td>{{ departure[1] }}</td>
+                <td>{{ departure[2] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endfor %}
+
     {% endblock %}
   </body>
 </html>
