@@ -42,26 +42,9 @@
           </div>
 
           <!-- right -->
-          <div class="col-md-5">
-            <!-- Weather -->
-            <h1 class="text-center">Wetter</h1>
-              {% for time, values in weather %}
-                <div class="col-md-6 weather-box">
-                  <h3 class="text-center">{{ time }}</h3>
-                  <p class="text-center">{{ values['text'] }}</p>
-                  <p class="text-center">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</p>
-                  <div class="row">
-                    <p class="col-md-8">Niederschlagswkt:</p>
-                    <p class="col-md-4 text-right">{{ values['rainfall'] }} %</p>
-                  </div>
-                  <div class="row">
-                    <p class="col-md-8">Windgeschwindigkeit:</p>
-                    <p class="col-md-4 text-right">{{ values['wind'] }} km/h</p>
-                  </div>
-                </div>
-              {% endfor %}
+          <div id="weather">
+            {% include 'weather.html' with { 'weather': weather } %}
           </div>
-        </div>
 
         {# isn't a marquee really annoying?! :P #}
         <p class="lead"><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></p>
@@ -73,5 +56,47 @@
       </footer>
 
     {% endblock %}
+
+    {% block javascripts %}
+      <script>
+        // timeout in milliseconds after which the weather section will be updated
+        var timeout = 15000;
+        var timer;
+
+        function updateWeather() {
+          console.debug("Update weather ...");
+
+          $.ajax({
+            url: "update_weather.php",
+            success: function(result) {
+              // console.debug(result)
+
+              // update HTML content
+              $("#weather").html(result);
+
+              // prevent multiple timers. this could occure if you call
+              // the updateWeather() function in the JavaScript console 
+              // of your browser
+              if (timer) {
+                clearTimeout(timer);
+              }
+
+              // set the timeout again
+              timer = setTimeout(updateWeather, timeout);
+            },
+            error: function(xhr, status, error) {
+              console.error('!Error. status: ', status, ', message: ', error)
+              console.error(xhr)
+            },
+          });
+
+        }
+
+        $(document).ready(function() {
+            timer = setTimeout(updateWeather, timeout);
+        })
+      </script>
+    {% endblock %}
+
   </body>
 </html>
