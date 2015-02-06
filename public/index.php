@@ -8,7 +8,8 @@ require_once __DIR__ . '/../util.php';
 
 // render template with the given context of variables
 echo $twig->render('index.html', [
-    'stops'   => getDepartures($client),
-    'marquee' => randomMarquee(),
-    'weather' => getWeather($client),
+    'display_weather' => (isset($_GET['weather'])) ? $_GET['weather'] === 'true'  : false,
+    'stops'           => getDepartures($client),
+    'marquee'         => randomMarquee(),
+    'weather'         => getWeather($client),
 ]);

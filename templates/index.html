@@ -15,33 +15,15 @@
       <div id="wrapper">
         <div class="row">
           <!-- left -->
-          <div class="col-md-7">
-            {% for street, departures in stops %}
-              <h1>{{ street }}</h1>
-              <table class="table table-striped table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th>Linie</th>
-                    <th>Richtung</th>
-                    <th>In Minuten</th>
-                  </tr>
-                </thead>          
-                <tbody>
-                  {% for departure in departures %}
-                    <tr>
-                      <td>{{ departure[0] }}</td>
-                      <td>{{ departure[1] }}</td>
-                      <td>{{ departure[2] }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            {% endfor %}
+          <div id="departure" class="col-md-7">
+            {% include 'departure.html' with { 'stops': stops } %}
           </div>
 
           <!-- right -->
           <div id="weather">
-            {% include 'weather.html' with { 'weather': weather } %}
+            {% if display_weather %}
+              {% include 'weather.html' with { 'weather': weather } %}
+            {% endif %}
           </div>
 
         {# isn't a marquee really annoying?! :P #}
@@ -58,8 +40,13 @@
     {% block javascripts %}
       <script>
         // timeout in milliseconds after which the weather section will be updated
-        var timeout = 15000;
-        var timer;
+        var timeouts = {
+          weather:   60000 * 24, // 1h
+          departure: 10000,      // 10s
+        }
+        var timers = {};
+
+        var display_weather = {{ display_weather | json_encode() }};
 
         function updateWeather() {
           console.debug("Update weather ...");
@@ -71,16 +58,17 @@
 
               // update HTML content
               $("#weather").html(result);
+              console.debug("Weather update successful")
 
               // prevent multiple timers. this could occure if you call
               // the updateWeather() function in the JavaScript console 
               // of your browser
-              if (timer) {
-                clearTimeout(timer);
+              if (timers.weather) {
+                clearTimeout(timers.weather);
               }
 
               // set the timeout again
-              timer = setTimeout(updateWeather, timeout);
+              timers.weather = setTimeout(updateWeather, timeouts.weather);
             },
             error: function(xhr, status, error) {
               console.error('!Error. status: ', status, ', message: ', error)
@@ -90,8 +78,43 @@
 
         }
 
+        function updateDeparture() {
+          console.debug("Update departure ...");
+
+          $.ajax({
+            url: "update_departure.php",
+            success: function(result) {
+              // console.debug(result)
+
+              // update HTML content
+              $("#departure").html(result);
+              console.debug("Departure update successful")
+
+              // prevent multiple timers. this could occure if you call
+              // the updateWeather() function in the JavaScript console 
+              // of your browser
+              if (timers.departure) {
+                clearTimeout(timers.departure);
+              }
+
+              // set the timeout again
+              timers.departure = setTimeout(updateDeparture, timeouts.departure);
+            },
+            error: function(xhr, status, error) {
+              console.error('!Error. status: ', status, ', message: ', error)
+              console.error(xhr)
+            },
+          });
+          
+        }
+
+
         $(document).ready(function() {
-            timer = setTimeout(updateWeather, timeout);
+            timers.departure = setTimeout(updateDeparture, timeouts.departure)
+
+            if (display_weather) {
+              timers.weather = setTimeout(updateWeather, timeouts.weather);
+            }
         })
       </script>
     {% endblock %}

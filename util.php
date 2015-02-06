@@ -32,13 +32,13 @@ function randomMarquee() {
     switch (rand(1,10)) {
         case 1:   return 'Simon, geh mal Bier holn !!!';
         case 2:   return 'Mops, wer hat die Gans gestohlen ?';
-        case 3:   return 'Gl&uuml;ck Auf !!!';
+        case 3:   return 'Glück Auf !!!';
         case 4:   return 'Socken wanted! Das Sockenmonster geht um...';
         case 5:   return 'TUUUUT TUUUT ... Zug im anrollen!';
         case 6:   return 'Willkommen in der besten WG diesseits der Galaxie!';
         case 7:   return 'Was geht aaab ???';
-        case 8:   return 'Putzplan f&uuml;r kommende Woche: K&uuml;che: Basti, Bad: Basti, Flur: Basti';
-        default:  return 'No news for today...';
+        case 8:   return 'Putzplan für kommende Woche: Küche: Basti, Bad: Basti, Flur: Basti';
+        default:  return 'No news for today ...';
     }
 }
 

@@ -1,0 +1,23 @@
+{# Twig partial for the departure section. This partial can be reused, 
+ # for example for the AJAX departure update request #}
+{% for street, departures in stops %}
+  <h1>{{ street }}</h1>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Linie</th>
+        <th>Richtung</th>
+        <th>In Minuten</th>
+      </tr>
+    </thead>          
+    <tbody>
+      {% for departure in departures %}
+        <tr>
+          <td>{{ departure[0] }}</td>
+          <td>{{ departure[1] }}</td>
+          <td>{{ departure[2] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}
