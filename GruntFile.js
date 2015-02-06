@@ -4,7 +4,10 @@ module.exports = function(grunt) {
     // compile scss -> css
     sass: {
       options: {
-        includePaths: ['bower_components/bootstrap-sass/assets/stylesheets'],
+        includePaths: [
+          'bower_components/bootstrap-sass/assets/stylesheets',
+          'bower_components/fontawesome/scss'
+        ],
       },
       // scss compile options for development
       dev: {
@@ -28,8 +31,8 @@ module.exports = function(grunt) {
       grunt: { files: ['GruntFile.js'] },
 
       sass: {
-        files: 'assets/scss/**.scss',
-        tasks: ['sass:dev'],
+        files: 'scss/**.scss',
+        tasks: ['sass:dev', 'sass:dist'],
       }
     },
 
@@ -37,9 +40,10 @@ module.exports = function(grunt) {
     copy: {
       main: {
         files: [
-          { expand: true, cwd: 'bower_components/bootstrap-sass/assets',             src: ['fonts/**'],         dest: 'public/assets/' },
-          { expand: true, cwd: 'bower_components/bootstrap-sass/assets/javascripts', src: ['bootstrap.min.js'], dest: 'public/assets/' },
-          { expand: true, cwd: 'bower_components/jquery/dist',                       src: ['jquery.min.js'],    dest: 'public/assets/' },
+          { expand: true, cwd: 'bower_components/bootstrap-sass/assets',             src: ['fonts/**'],         dest: 'public/assets/'                   },
+          { expand: true, cwd: 'bower_components/bootstrap-sass/assets/javascripts', src: ['bootstrap.min.js'], dest: 'public/assets/'                   },
+          { expand: true, cwd: 'bower_components/fontawesome/fonts',                 src: ['**'],               dest: 'public/assets/fonts/font-awesome' },
+          { expand: true, cwd: 'bower_components/jquery/dist',                       src: ['jquery.min.js'],    dest: 'public/assets/'                   },
         ],
       },
     }

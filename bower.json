@@ -1,6 +1,7 @@
 {
   "name": "Departure-Monitor",
   "dependencies": {
-    "bootstrap-sass": "~3.3.0"
+    "bootstrap-sass": "~3.3.0",
+    "fontawesome": "~4.3.0"
   }
 }

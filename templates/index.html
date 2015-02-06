@@ -25,6 +25,16 @@
               {% include 'weather.html' with { 'weather': weather } %}
             {% endif %}
           </div>
+        </div>
+
+        <div class="row">
+          <div class="btn-group btn-group-lg" role="group" aria-label="...">
+            <button type="button" class="btn {{ (refresh) ? 'btn-success' : 'btn-default' }}" id="btn-timer"><i class="fa fa-clock-o" aria-hidden="true"></i> Timer</button>
+            <button type="button" class="btn btn-success" id="btn-departure"><i class="fa fa-bus" aria-hidden="true"></i> Bus</button>
+            <button type="button" class="btn btn-default" id="btn-weather"><i class="fa fa-tint" aria-hidden="true"></i> Wetter</button>
+          </div>
+          <button type="button" class="btn btn-lg btn-default" id="btn-reload"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+        </div>
 
         {# isn't a marquee really annoying?! :P #}
         <p class="lead"><marquee scrollamount='10' scrolldelay='10'>{{ marquee }}</marquee></p>
@@ -32,9 +42,8 @@
         <footer class="row">
           <div class="col-md-6"><p class="text-center">{{ "now" | date("H:i") }}</p></div>
           <div class="col-md-6"><p class="text-center">{{ "now" | date("d.m.Y")  }}</p></div>
-        </div>
-      </footer>
-
+        </footer>
+      </div>
     {% endblock %}
 
     {% block javascripts %}
@@ -46,29 +55,32 @@
         }
         var timers = {};
 
-        var display_weather = {{ display_weather | json_encode() }};
-
-        function updateWeather() {
-          console.debug("Update weather ...");
+        function update(subject, refresh) {
+          console.debug("Update " + subject);
 
           $.ajax({
-            url: "update_weather.php",
+            url: "update_" + subject + ".php",
             success: function(result) {
               // console.debug(result)
 
-              // update HTML content
-              $("#weather").html(result);
-              console.debug("Weather update successful")
+              // update HTML content. The HTML element that has the
+              // subject name as id attribute will be updated
+              $("#" + subject).html(result);
+              console.debug(subject + " update successful")
 
               // prevent multiple timers. this could occure if you call
               // the updateWeather() function in the JavaScript console 
               // of your browser
-              if (timers.weather) {
-                clearTimeout(timers.weather);
+              if (timers[subject]) {
+                clearTimeout(timers[subject]);
               }
 
-              // set the timeout again
-              timers.weather = setTimeout(updateWeather, timeouts.weather);
+              // Set the timeout again if the refresh flag ist set. For this,
+              // we bind the current subject as argument to the update
+              // function and assign this bound function as callback.
+              if (refresh) {
+                timers[subject] = setTimeout(update.bind(null, subject, true), timeouts[subject]);
+              }
             },
             error: function(xhr, status, error) {
               console.error('!Error. status: ', status, ', message: ', error)
@@ -77,45 +89,97 @@
           });
 
         }
-
-        function updateDeparture() {
-          console.debug("Update departure ...");
-
-          $.ajax({
-            url: "update_departure.php",
-            success: function(result) {
-              // console.debug(result)
-
-              // update HTML content
-              $("#departure").html(result);
-              console.debug("Departure update successful")
-
-              // prevent multiple timers. this could occure if you call
-              // the updateWeather() function in the JavaScript console 
-              // of your browser
-              if (timers.departure) {
-                clearTimeout(timers.departure);
-              }
-
-              // set the timeout again
-              timers.departure = setTimeout(updateDeparture, timeouts.departure);
-            },
-            error: function(xhr, status, error) {
-              console.error('!Error. status: ', status, ', message: ', error)
-              console.error(xhr)
-            },
-          });
-          
-        }
-
 
         $(document).ready(function() {
-            timers.departure = setTimeout(updateDeparture, timeouts.departure)
-
-            if (display_weather) {
-              timers.weather = setTimeout(updateWeather, timeouts.weather);
+            // initialize timeouts only if the timer is active
+            if ($('#btn-timer').hasClass('btn-success')) {
+              for (var key in timeouts) {
+                if ($('#btn-' + key).hasClass('btn-success')) {
+                  timers[key] = setTimeout(update.bind(null, key, true), timeouts[key]);
+                }
+              }
             }
-        })
+
+
+            // initialize event listeners
+            $('#btn-timer').on('click', function() {
+              var btn = $(this);
+              if (btn.hasClass('btn-success')) {
+                for (var key in timers) {
+                  console.debug('Clear timeout ' + key);
+                  clearTimeout(timers[key]);
+                }
+                // toggle class
+                btn.removeClass('btn-success');
+                btn.addClass('btn-default');
+              } else {
+                // set all timeouts
+                for (var key in timeouts) {
+                  // only set timer if the related button has the "btn-success" class
+                  if ($('#btn-' + key).hasClass('btn-success')) {
+                    console.debug('Set timeout for ' + key + ' to ' + timeouts[key] + 'ms')
+                    timers[key] = setTimeout(update.bind(null, key), timeouts[key]);
+                  }
+                }
+                // toggle classes
+                btn.removeClass('btn-default');
+                btn.addClass('btn-success');
+              }
+            });
+
+            // Manual reload
+            $('#btn-reload').on('click', function() {
+              // clear all timers
+              for (var key in timers) {
+                clearTimeout(timers[key]);
+              }
+
+              var refresh = $('#btn-timer').hasClass('btn-success');
+
+              for (var key in timeouts) {
+                // only set timer if the related button has the "btn-success" class
+                if ($('#btn-' + key).hasClass('btn-success')) {
+                  // perform update
+                  update(key, false);
+
+                  if (refresh) {
+                    // Set timeout again
+                    console.debug('Set timeout for ' + key + ' to ' + timeouts[key] + 'ms')
+                    timers[key] = setTimeout(update.bind(null, key, refresh), timeouts[key]);
+                  }
+                }
+              }
+            });
+
+            for (var key in timeouts) {
+              $('#btn-' + key).on('click', function() {
+                var btn = $(this);
+                // get key from the id attribute of the HTML element
+                // by cutting of the first 4 characters ("btn-")
+                var key = btn.attr('id').substr(4);
+
+                console.debug(key);
+
+                if (btn.hasClass('btn-success')) {
+                  clearTimeout(timers[key]);
+
+                  // toggle class
+                  btn.removeClass('btn-success');
+                  btn.addClass('btn-default');
+                } else {
+                  // performce update and set timout again, but only of the timer is active
+                  var refresh = $('#btn-timer').hasClass('btn-success');
+                  if (refresh) {
+                    update(key, refresh);
+                  }
+
+                  // toggle class
+                  btn.removeClass('btn-default');
+                  btn.addClass('btn-success');
+                }
+              });
+            }
+        });
       </script>
     {% endblock %}
 
