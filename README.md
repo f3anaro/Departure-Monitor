@@ -26,9 +26,10 @@ distribution, just install the follwing package:
 $ sudo apt-get install git-core php5-cli
 ```
 
-We use [Bower](http://bower.io/) - another package manager for our web assets like
-Bootstrap and jQuery - and [Grunt](http://gruntjs.com/) - a JavaScript task runner
-for build processes. Both programs are written in JavaScript and require
+We use [Bower](http://bower.io/) - another package manager for our web assets
+like [Foundation](http://foundation.zurb.com/) and [jQuery](http://jquery.com/)
+- and [Grunt](http://gruntjs.com/) - a JavaScript task runner for build
+processes. Both programs are written in JavaScript and require
 [node.js](http://nodejs.org/).
 
 ```
