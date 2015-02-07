@@ -28,7 +28,8 @@ $twig   = new Twig_Environment($loader, [
  * 
  * @return string A meaningful message ;)
  */
-function randomMarquee() {
+function randomMarquee()
+{
     switch (rand(1,10)) {
         case 1:   return 'Simon, geh mal Bier holn !!!';
         case 2:   return 'Mops, wer hat die Gans gestohlen ?';
@@ -55,7 +56,8 @@ function randomMarquee() {
  *                     2 => departure time in minutes,
  *                 ]
  */
-function getDepartures(Client $client, $streets = ["Lene-Glatzer-Straße", "Jacobi-Straße"], $limit = 6) {
+function getDepartures(Client $client, $streets = ["Lene-Glatzer-Straße", "Jacobi-Straße"], $limit = 6)
+{
     // Make HTTP request to external website that returns a JSON list
     $request = $client->createRequest('GET', 'http://widgets.vvo-online.de/abfahrtsmonitor/abfahrten.do', [
         'query' => [
@@ -76,12 +78,29 @@ function getDepartures(Client $client, $streets = ["Lene-Glatzer-Straße", "Jaco
 }
 
 
-function getWeather(Client $client) {
+function getWeather(Client $client)
+{
+    // Cache parameters
+    $cache_file = __DIR__ . '/cache/weather.xml'; // filename where XML response should be stored
+    $expire     = 60 * 15;                        // time in seconds after which the cached XML document expires (15min)
 
-    $response = $client->get('http://api.wetter.com/forecast/weather/city/DE0002265010/project/wetteranzeigewg/cs/dbc178aa617f85fd27676d00ae85332e');
-    // parse the XML response
-    $xml = $response->xml();
-  
+    // Very simple caching of the response. Check if the cache file exists, if yes, check
+    // if the file content is not older than the expiration time
+    if (file_exists($cache_file) && time() - filemtime($cache_file) < $expire) {
+        error_log("Load weather from cache " . $cache_file, 4);
+
+        // load weather from the cached file
+        $xml = simplexml_load_file($cache_file);
+    } else {
+        error_log("Request weather from http://api.wetter.com/", 4);
+
+        $response = $client->get('http://api.wetter.com/forecast/weather/city/DE0002265010/project/wetteranzeigewg/cs/dbc178aa617f85fd27676d00ae85332e');
+        // parse the XML response
+        $xml = $response->xml();
+
+        // cache the result
+        file_put_contents($cache_file, $response->getBody());
+    }
 
     // simple lookup table for times
     $times   = ['Früh', 'Mittag', 'Abend', 'Nacht'];

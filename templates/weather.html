@@ -1,22 +1,21 @@
 {# Twig partial for the weather section. This partial can be reused, 
  # for example for the AJAX weather update request #}
 <div class="col-md-5">
-    <!-- Weather -->
-    <h1 class="text-center">Wetter</h1>
-      {% for time, values in weather %}
-        <div class="col-md-6 weather-box">
-          <h3 class="text-center">{{ time }}</h3>
-          <p class="text-center">{{ values['text'] }}</p>
-          <p class="text-center">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</p>
-          <div class="row">
-            <p class="col-md-8">Niederschlagswkt:</p>
-            <p class="col-md-4 text-right">{{ values['rainfall'] }} %</p>
-          </div>
-          <div class="row">
-            <p class="col-md-8">Windgeschwindigkeit:</p>
-            <p class="col-md-4 text-right">{{ values['wind'] }} km/h</p>
-          </div>
+  <!-- Weather -->
+  <h1 class="text-center">Wetter</h1>
+    {% for time, values in weather %}
+      <div class="col-md-6 weather-box">
+        <h3 class="text-center">{{ time }}</h3>
+        <p class="text-center">{{ values['text'] }}</p>
+        <p class="text-center">{{ values['max_temp'] }} | {{ values['min_temp'] }} °C</p>
+        <div class="row">
+          <p class="col-md-8">Niederschlagswkt:</p>
+          <p class="col-md-4 text-right">{{ values['rainfall'] }} %</p>
         </div>
-      {% endfor %}
-  </div>
+        <div class="row">
+          <p class="col-md-8">Windgeschwindigkeit:</p>
+          <p class="col-md-4 text-right">{{ values['wind'] }} km/h</p>
+        </div>
+      </div>
+    {% endfor %}
 </div>
